@@ -1,0 +1,45 @@
+services:
+  web:
+    build: .
+    container_name: symfony
+    ports:
+      - "80:80"
+    volumes: 
+      - .:/var/www/html
+    depends_on:
+      - db
+    networks:
+      hrm_network:
+        ipv4_address: 172.18.0.3
+
+  db:
+    image: postgres:17
+    container_name: hrm_system_db
+    environment:
+      POSTGRES_DB: hrmsystem
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      hrm_network:
+        ipv4_address: 172.18.0.2
+    restart: always
+
+###> doctrine/doctrine-bundle ###
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./docker/db/data:/var/lib/postgresql/data:rw
+###< doctrine/doctrine-bundle ###
+
+volumes:
+  pgdata:
+
+networks:
+  hrm_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+          gateway: 172.18.0.1
