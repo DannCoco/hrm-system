@@ -5,9 +5,10 @@ RUN apt-get update && apt-get install -y \
     curl \
     vim \
     unzip \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql pgsql
 
 RUN a2enmod rewrite
 
